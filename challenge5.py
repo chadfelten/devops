@@ -14,7 +14,6 @@ inst = cdb.create("test_instance", flavor="m1.tiny", volume=2)
 
 while inst.status != "ACTIVE":
     inst = cdb.get(inst)
-print inst, "is ready"
 
 #create database
 db = inst.create_database("db_test")
