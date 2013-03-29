@@ -5,41 +5,56 @@ import os
 import pyrax
 import re
 
-creds_file = os.path.expanduser("~/cloud/.cred")
+creds_file = os.path.expanduser("~/.cred")
 pyrax.set_credential_file(creds_file)
+cs_ord = pyrax.connect_to_cloudservers(region="ORD")
 cs = pyrax.cloudservers
 
+srv_dict = {}
+for srv in cs.servers.list():
+    srv_dict[srv.name] = srv.id
+for k, v in srv_dict.items():
+    print k
+name = raw_input("Please enter the server name to create an image from: " )
+srv_id = srv_dict[name]
+server = cs.servers.get(srv_id)
 
-#ID of server web2
-id_of_server = '976ee3da-7343-4120-8c2e-18d9267917f7'
-server = cs.servers.get(id_of_server)
-create_img = server.create_image('web2-image')
+#Image name
+image_name = name + "-image"
 
+create_img = server.create_image(image_name)
 get_img  = cs.images.get(create_img)
-while get_img.status != 'ACTIVE':
-    get_img = cs.images.get(create_img)
-    get_img.status
-print "IMAGE CREATED"
-print "Cloning now.."
 
-#create a clone from image
-server = cs.servers.create('web4', create_img, 2)
-print "Server:", server.name
-print "Admin password:", server.adminPass
+while get_img.status != 'ACTIVE':
+   get_img = cs.images.get(create_img)
+   get_img.status
+print "IMAGE CREATED"
+
+#512MB 20GB disk - this would probably be based on a role or tag instead of being defined
+flavor = 2
+#image id
+image = [img for img in cs.images.list() if image_name in img.name][0]
+
+print "Deploying server from image."
+role = raw_input("Enter the name the server: ")
+
+server = cs.servers.create(role, image, flavor)
 networks =  server.networks
+print "Server name: ", server.name
+print "Admin Password: ", server.adminpass
+
 while not networks:
-     server = cs.servers.get(server.id)
-     networks =  server.networks
+    server = cs.servers.get(server.id)
+    networks =  server.networks
 ip_regex = r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
 ip_search = re.search(ip_regex, networks['public'][0])
 if ip_search:
-    print "IP address:", networks['public'][0]
+    print "IP Address: ", networks['public'][0]
 else:
-    print "IP address:", networks['public'][1]
+    print "IP Address: ", networks['public'][1]
+    
 
-       
-          
- 
+     
 
 
 

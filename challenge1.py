@@ -17,6 +17,7 @@ flavor = 2
 
 def create_cs(role, num): 
     srv_list = []
+    srv_dict_list = []
     for i in range(num):
         i = str(i+1)
         srv_list.append(role + i)
@@ -40,13 +41,15 @@ def create_cs(role, num):
             dict["IP address"] =  networks['public'][0]
         else:
             dict["IP address"] = networks['public'][1]
-        return dict
+        srv_dict_list.append(dict)
+    return srv_dict_list
 
 if __name__ == '__main__':
     role = raw_input("Enter the role for the servers: ")
     num =  int(raw_input("How many: "))
-    dict = create_cs(role, num)
-    for k, v in dict.items():
-        print k, ":", v
+    lst = create_cs(role, num)
+    for d in lst:
+        for k, v in d.items():
+            print k,":", v
     
 
