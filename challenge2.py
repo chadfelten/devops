@@ -30,7 +30,7 @@ while get_img.status != 'ACTIVE':
    get_img.status
 print "IMAGE CREATED"
 
-#512MB 20GB disk - this would probably be based on a role or tag instead of being defined
+#512MB 20GB disk - this would probably be dynamic(based on a role or tag) instead of being defined here
 flavor = 2
 #image id
 image = [img for img in cs.images.list() if image_name in img.name][0]
@@ -41,7 +41,7 @@ role = raw_input("Enter the name the server: ")
 server = cs.servers.create(role, image, flavor)
 networks =  server.networks
 print "Server name: ", server.name
-print "Admin Password: ", server.adminpass
+print "Admin Password: ", server.adminPass
 
 while not networks:
     server = cs.servers.get(server.id)
