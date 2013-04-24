@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# NOT COMPLETE
-
-
 import os
 import pyrax
 import re
@@ -15,10 +12,12 @@ dns = pyrax.cloud_dns
 ip_regex = r'\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b'
 fqdn_regex = r'(?=^.{1,254}$)(^(?:(?!\d+\.)[a-zA-Z0-9_\-]{1,63}\.?)+(?:[a-zA-Z]{2,})$)'
 
-dom = dns.create(name="my.example.com", emailAddress="admin@example.com", ttl=600)
+domain_name = 'derekfelten.com'
+dom = dns.find(name=domain_name)
+print('Adding record for',dom)
 
 while True:
-    fqdn = raw_input("enter fqdn: ")
+    fqdn = 'derekfelten.com'
     fqdn_search = re.search(fqdn_regex, fqdn)
     if fqdn_search:
         break
@@ -26,7 +25,7 @@ while True:
         print "FQDN is not formatted correctly."
     
 while True:
-    ip = raw_input("enter ip: ")
+    ip = '97.74.42.79'
     ip_search = re.search(ip_regex, ip)
     if ip_search:
         break
