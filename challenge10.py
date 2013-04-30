@@ -60,15 +60,17 @@ time.sleep(20)
 
 lb.add_health_monitor(type="CONNECT", delay=10, timeout=10, attemptsBeforeDeactivation=3)
 
-"""
 domain_name = 'derekfelten.com'
 dom = dns.find(name=domain_name)
 fqdn = 'www.derekfelten.com'
+ip  = lb.virtual_ips
+
+
 
 rec = [{
         "type": "A",
         "name": fqdn,
-        "data": vip,
+        "data": ip[0].address,
         }]
 
 print dom.add_records(rec)
@@ -79,6 +81,6 @@ cont = cf.get_container(cn)
 meta = {'X-Container-Meta-Web-Index': 'index.html'}
 cf.set_container_metadata(cont, meta)
 obj = cf.store_object(cn, 'index.html', html)
-"""
+
 
 
